@@ -1,0 +1,43 @@
+[package]
+name = "asterism-xpub"
+version = "0.1.0"
+edition = "2024"
+description = "External signer backend for the Emerald multi-signature custody platform: XPUB ingestion + descriptor coordination for consumer hardware wallets (Trezor, Jade, Ledger, Coldcard, Foundation Passport Prime)."
+license = "MIT OR Apache-2.0"
+
+[features]
+default = []
+# Expose `TestExternalSigner` and the BIP-39 fixture loader to downstream
+# tests. Pulls in `bip39` purely to derive deterministic xprivs from
+# well-known dev mnemonics — never enable this in a production build.
+test-utils = ["dep:bip39"]
+# Enable tests that talk to a live Bitcoin Core node over JSON-RPC. The
+# node connection details are read from `.env` (BITCOIN_RPC_HOST/PORT/USER/
+# PASSWORD/NETWORK). Tests that target a regtest chain additionally need
+# the `test-utils` feature for the BIP-39 fixture loader.
+node-tests = []
+
+[dependencies]
+asterism-core = { path = "../asterism-core" }
+bitcoin = "0.32.100"
+miniscript = "12.3.7"
+serde = { version = "1.0.228", features = ["derive"] }
+thiserror = "2.0.18"
+
+# test-utils only.
+bip39 = { version = "2.1.0", optional = true }
+
+[dev-dependencies]
+asterism-core = { path = "../asterism-core", features = ["test-utils"] }
+bdk_wallet = "3.1.0"
+dotenvy = "0.15.7"
+# Used by the `node-tests` feature for the minimal Bitcoin Core JSON-RPC
+# client (matches the version asterism-core uses for the same purpose).
+ureq = { version = "2.10", features = ["json"] }
+serde_json = "1.0.150"
+# Chain-sync stack for `node-tests`-gated regtest spend tests. The Emitter
+# pattern is the canonical BDK answer for pulling block + mempool data
+# from a Bitcoin Core node, and chain sync is explicitly a consumer-app
+# responsibility per .cursorrules — so these stay strictly in dev-deps.
+bdk_bitcoind_rpc = "0.22.0"
+bitcoincore-rpc = "0.19.0"
