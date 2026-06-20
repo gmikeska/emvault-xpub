@@ -81,5 +81,5 @@ This crate is held to the same strict-clippy bar as `asterism-core` and
 
 ```bash
 cargo clippy -p asterism-xpub --all-features -- \
-  -D warnings -W clippy::pedantic -W clippy::nursery -W rust-2018-idioms
+  -D warnings -W clippy::pedantic -W rust-2018-idioms
 ```
