@@ -20,7 +20,7 @@ node-tests = []
 
 [dependencies]
 asterism-core = { version = "0.1.0", path = "../asterism-core" }
-bitcoin = "0.32.100"
+bitcoin = "0.32.10"
 miniscript = "12.3.7"
 serde = { version = "1.0.228", features = ["derive"] }
 thiserror = "2.0.18"
