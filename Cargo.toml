@@ -19,7 +19,7 @@ test-utils = ["dep:bip39"]
 node-tests = []
 
 [dependencies]
-asterism-core = { path = "../asterism-core" }
+asterism-core = { version = "0.1.0", path = "../asterism-core" }
 bitcoin = "0.32.100"
 miniscript = "12.3.7"
 serde = { version = "1.0.228", features = ["derive"] }
