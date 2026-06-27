@@ -2,7 +2,7 @@
 name = "emvault-xpub"
 version = "0.1.0"
 edition = "2024"
-description = "External signer backend for the Emerald multi-signature custody platform: XPUB ingestion + descriptor coordination for consumer hardware wallets (Trezor, Jade, Ledger, Coldcard, Foundation Passport Prime)."
+description = "External signer backend for the EmVault multi-signature custody platform: XPUB ingestion + descriptor coordination for consumer hardware wallets (Trezor, Jade, Ledger, Coldcard, Foundation Passport Prime)."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/gmikeska/emvault-xpub"
 
