@@ -7,9 +7,9 @@
 
 #![cfg(feature = "test-utils")]
 
-use asterism_core::descriptor::{KeyMode, to_multipath_string};
-use asterism_core::{Federation, NetworkType, Signer};
-use asterism_xpub::TestFederationFixture;
+use emvault_core::descriptor::{KeyMode, to_multipath_string};
+use emvault_core::{Federation, NetworkType, Signer};
+use emvault_xpub::TestFederationFixture;
 use bdk_wallet::KeychainKind;
 use bitcoin::{AddressType, Network};
 

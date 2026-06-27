@@ -1,14 +1,14 @@
-//! End-to-end spend test for the asterism-xpub 3-of-5 federation against
+//! End-to-end spend test for the emvault-xpub 3-of-5 federation against
 //! a regtest Bitcoin Core node.
 //!
 //! Flow exercised:
 //!
-//! 1. Connect to the regtest node configured in `asterism-xpub/.env` and
+//! 1. Connect to the regtest node configured in `emvault-xpub/.env` and
 //!    assert `chain == "regtest"`.
 //! 2. Build the 3-of-5 federation from the BIP-39 fixture (regtest-typed
 //!    `TestExternalSigner`s).
 //! 3. Idempotently bootstrap the watch-only descriptor wallet
-//!    `asterism-xpub-regtest` and import the receive (`/0/*`) +
+//!    `emvault-xpub-regtest` and import the receive (`/0/*`) +
 //!    change (`/1/*`) descriptors.
 //! 4. Self-fund: if the watch-only balance is below
 //!    [`FUND_THRESHOLD_BTC`], derive the next unfunded `/0/N`, send
@@ -34,7 +34,7 @@
 //! Run with:
 //!
 //! ```bash
-//! cargo test -p asterism-xpub \
+//! cargo test -p emvault-xpub \
 //!   --features test-utils,node-tests \
 //!   --test regtest_spend -- --nocapture
 //! ```
@@ -44,11 +44,11 @@
 
 #![cfg(all(feature = "test-utils", feature = "node-tests"))]
 
-use asterism_core::descriptor::KeyMode;
-use asterism_core::{
+use emvault_core::descriptor::KeyMode;
+use emvault_core::{
     Federation, NetworkType, Signer, SigningAction, SigningCoordinator, UnsignedPsbt,
 };
-use asterism_xpub::{DeviceType, TestExternalSigner};
+use emvault_xpub::{DeviceType, TestExternalSigner};
 use bdk_wallet::SignOptions;
 use bitcoin::address::NetworkUnchecked;
 use bitcoin::bip32::DerivationPath;
@@ -58,7 +58,7 @@ mod common;
 
 use common::rpc::RpcClient;
 
-const WALLET_NAME: &str = "asterism-xpub-regtest";
+const WALLET_NAME: &str = "emvault-xpub-regtest";
 /// Range of the receive + change descriptor imports — must match
 /// `regtest_node_setup` so the importdescriptors call is idempotent.
 const IMPORT_RANGE_LO: u32 = 0;
@@ -82,7 +82,7 @@ fn three_of_five_spends_real_utxo_and_confirms() {
     let Some(rpc) = RpcClient::from_env() else {
         eprintln!(
             "[skip] BITCOIN_RPC_* env vars not set; this test only runs against a \
-             configured regtest node. See asterism-xpub/.env."
+             configured regtest node. See emvault-xpub/.env."
         );
         return;
     };
@@ -355,7 +355,7 @@ fn three_of_five_spends_real_utxo_and_confirms() {
 
     println!();
     println!("====================================================================");
-    println!("  asterism-xpub regtest spend — confirmed");
+    println!("  emvault-xpub regtest spend — confirmed");
     println!("====================================================================");
     println!("  txid:               {txid}");
     println!("  destination:        {dest_addr} ({SPEND_AMOUNT_BTC} BTC)");
@@ -396,19 +396,19 @@ fn pick_unfunded_receive_address(rpc: &RpcClient, fed: &Federation<Box<dyn Signe
 }
 
 fn build_regtest_test_signers() -> Vec<TestExternalSigner> {
-    let path: DerivationPath = std::env::var("ASTERISM_XPUB_TEST_DERIVATION_PATH")
-        .expect("ASTERISM_XPUB_TEST_DERIVATION_PATH set in .env")
+    let path: DerivationPath = std::env::var("EMVAULT_XPUB_TEST_DERIVATION_PATH")
+        .expect("EMVAULT_XPUB_TEST_DERIVATION_PATH set in .env")
         .parse()
         .expect("derivation path parses");
 
     (1..=5u32)
         .map(|n| {
-            let mnemonic = std::env::var(format!("ASTERISM_XPUB_TEST_MNEMONIC_{n}"))
-                .unwrap_or_else(|_| panic!("missing ASTERISM_XPUB_TEST_MNEMONIC_{n}"));
-            let device_label = std::env::var(format!("ASTERISM_XPUB_TEST_DEVICE_{n}"))
-                .unwrap_or_else(|_| panic!("missing ASTERISM_XPUB_TEST_DEVICE_{n}"));
-            let label = std::env::var(format!("ASTERISM_XPUB_TEST_LABEL_{n}"))
-                .unwrap_or_else(|_| panic!("missing ASTERISM_XPUB_TEST_LABEL_{n}"));
+            let mnemonic = std::env::var(format!("EMVAULT_XPUB_TEST_MNEMONIC_{n}"))
+                .unwrap_or_else(|_| panic!("missing EMVAULT_XPUB_TEST_MNEMONIC_{n}"));
+            let device_label = std::env::var(format!("EMVAULT_XPUB_TEST_DEVICE_{n}"))
+                .unwrap_or_else(|_| panic!("missing EMVAULT_XPUB_TEST_DEVICE_{n}"));
+            let label = std::env::var(format!("EMVAULT_XPUB_TEST_LABEL_{n}"))
+                .unwrap_or_else(|_| panic!("missing EMVAULT_XPUB_TEST_LABEL_{n}"));
             TestExternalSigner::from_mnemonic(
                 &mnemonic,
                 "",

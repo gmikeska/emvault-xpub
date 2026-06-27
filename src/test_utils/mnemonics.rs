@@ -1,11 +1,11 @@
 //! BIP-39 fixture loader for the 5-signer test federation.
 //!
 //! The fixture is read from the process environment (callers should
-//! `dotenvy::from_path("asterism-xpub/.env").ok()` before invoking
-//! [`TestFederationFixture::from_env`]). See [`asterism-xpub/.env`] for the
+//! `dotenvy::from_path("emvault-xpub/.env").ok()` before invoking
+//! [`TestFederationFixture::from_env`]). See [`emvault-xpub/.env`] for the
 //! canonical mnemonics; they are publicly-known test vectors with no value.
 
-use asterism_core::DeviceType;
+use emvault_core::DeviceType;
 use bitcoin::Network;
 use bitcoin::bip32::DerivationPath;
 
@@ -36,7 +36,7 @@ pub struct TestFederationFixture {
 
 impl TestFederationFixture {
     /// Load the fixture from process environment variables. The caller is
-    /// expected to have already loaded `asterism-xpub/.env` via
+    /// expected to have already loaded `emvault-xpub/.env` via
     /// [`dotenvy::from_path`].
     ///
     /// # Errors
@@ -46,17 +46,17 @@ impl TestFederationFixture {
     /// dedicated `Env` variant because the fixture loader is itself a
     /// test-side concern; production callers never invoke this.)
     pub fn from_env() -> Result<Self, XpubError> {
-        let network = parse_network(&env_required("ASTERISM_XPUB_TEST_NETWORK")?)?;
-        let derivation_path = env_required("ASTERISM_XPUB_TEST_DERIVATION_PATH")?
+        let network = parse_network(&env_required("EMVAULT_XPUB_TEST_NETWORK")?)?;
+        let derivation_path = env_required("EMVAULT_XPUB_TEST_DERIVATION_PATH")?
             .parse::<DerivationPath>()
             .map_err(|e| XpubError::Sign(format!("derivation path: {e}")))?;
 
         let mut specs = Vec::with_capacity(5);
         for n in 1..=5u32 {
-            let mnemonic = env_required(&format!("ASTERISM_XPUB_TEST_MNEMONIC_{n}"))?;
+            let mnemonic = env_required(&format!("EMVAULT_XPUB_TEST_MNEMONIC_{n}"))?;
             let device_type =
-                parse_device_type(&env_required(&format!("ASTERISM_XPUB_TEST_DEVICE_{n}"))?)?;
-            let label = env_required(&format!("ASTERISM_XPUB_TEST_LABEL_{n}"))?;
+                parse_device_type(&env_required(&format!("EMVAULT_XPUB_TEST_DEVICE_{n}"))?)?;
+            let label = env_required(&format!("EMVAULT_XPUB_TEST_LABEL_{n}"))?;
             specs.push(TestSignerSpec {
                 mnemonic,
                 device_type,
@@ -97,7 +97,7 @@ impl TestFederationFixture {
 fn env_required(name: &str) -> Result<String, XpubError> {
     std::env::var(name).map_err(|_| {
         XpubError::Sign(format!(
-            "missing required env var `{name}`; did you load asterism-xpub/.env?"
+            "missing required env var `{name}`; did you load emvault-xpub/.env?"
         ))
     })
 }
@@ -112,7 +112,7 @@ fn parse_network(s: &str) -> Result<Network, XpubError> {
         "signet" => Ok(Network::Signet),
         "regtest" => Ok(Network::Regtest),
         other => Err(XpubError::Sign(format!(
-            "unrecognized ASTERISM_XPUB_TEST_NETWORK: {other:?}"
+            "unrecognized EMVAULT_XPUB_TEST_NETWORK: {other:?}"
         ))),
     }
 }

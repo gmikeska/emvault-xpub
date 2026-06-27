@@ -1,5 +1,5 @@
 //! Tiny helper that prints a descriptor key for the first BIP-39 mnemonic
-//! in `asterism-xpub/.env`. Useful for manually exercising browser-side
+//! in `emvault-xpub/.env`. Useful for manually exercising browser-side
 //! onboarding flows that consume the canonical descriptor-key shape.
 //!
 //! Run with:
@@ -10,12 +10,12 @@
 
 #[cfg(feature = "test-utils")]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    use asterism_core::Signer;
+    use emvault_core::Signer;
 
     let env_path = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(".env");
     dotenvy::from_path(&env_path).ok();
 
-    let fixture = asterism_xpub::TestFederationFixture::from_env()?;
+    let fixture = emvault_xpub::TestFederationFixture::from_env()?;
     let signers = fixture.build_test_signers()?;
     let first = signers.first().ok_or("no signers in fixture")?;
     let s = first.external_signer();

@@ -24,7 +24,7 @@ use bdk_wallet::Wallet;
 use bitcoincore_rpc::{Auth, Client};
 
 /// Connect a fresh `bitcoincore_rpc::Client` to the node configured in
-/// `asterism-xpub/.env`.
+/// `emvault-xpub/.env`.
 ///
 /// Returns `None` if any of the required env vars are missing — callers
 /// should treat that as a "skip the test" signal, matching the behaviour

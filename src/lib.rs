@@ -1,15 +1,15 @@
-//! # asterism-xpub
+//! # emvault-xpub
 //!
-//! XPUB-based [`Signer`](asterism_core::Signer) backend for consumer hardware
+//! XPUB-based [`Signer`](emvault_core::Signer) backend for consumer hardware
 //! wallets (Trezor, Blockstream Jade, Ledger, Coldcard, Foundation Passport
 //! Prime, etc.).
 //!
 //! ## What this crate provides
 //!
-//! - [`ExternalSigner`] — a [`Signer`](asterism_core::Signer) implementation
+//! - [`ExternalSigner`] — a [`Signer`](emvault_core::Signer) implementation
 //!   that holds an XPUB plus key-origin metadata. It declares
-//!   [`SignerType::External`](asterism_core::SignerType::External) so the
-//!   [`SigningCoordinator`](asterism_core::SigningCoordinator) routes signing
+//!   [`SignerType::External`](emvault_core::SignerType::External) so the
+//!   [`SigningCoordinator`](emvault_core::SigningCoordinator) routes signing
 //!   requests through the browser, never attempting to sign server-side.
 //! - [`ExternalSigner::from_descriptor_key`] — parse a `[fp/origin]xpub...`
 //!   descriptor key (the format real hardware wallets export) into a fully
@@ -19,22 +19,22 @@
 //! - Behind the `test-utils` feature: [`test_utils::TestExternalSigner`] —
 //!   a deterministic in-process simulator that mimics a hardware wallet's
 //!   signing behaviour for round-trip tests of the
-//!   [`SigningCoordinator`](asterism_core::SigningCoordinator) flow.
+//!   [`SigningCoordinator`](emvault_core::SigningCoordinator) flow.
 //!
 //! ## Why "External"?
 //!
 //! Consumer hardware wallets are **structurally incapable** of signing
 //! server-side: the device is in the trustee's pocket, connected to the
-//! trustee's browser, communicating over USB-HID / BLE / QR. The Asterism
+//! trustee's browser, communicating over USB-HID / BLE / QR. The EmVault
 //! library never sees the device. `ExternalSigner` therefore holds public-key
 //! material only and routes every signing request through
-//! [`SigningCoordinator::request_signatures`](asterism_core::SigningCoordinator::request_signatures),
+//! [`SigningCoordinator::request_signatures`](emvault_core::SigningCoordinator::request_signatures),
 //! which produces a
-//! [`SigningAction::External`](asterism_core::SigningAction::External)
+//! [`SigningAction::External`](emvault_core::SigningAction::External)
 //! payload for the web layer to forward to the browser. The browser invokes
 //! the device-specific SDK (Trezor Connect, Jade serial, Ledger hwapp, etc.),
 //! collects the signed PSBT, and feeds it back via
-//! [`SigningCoordinator::receive_signature`](asterism_core::SigningCoordinator::receive_signature).
+//! [`SigningCoordinator::receive_signature`](emvault_core::SigningCoordinator::receive_signature).
 //!
 //! This crate intentionally contains **no USB/HID/BLE drivers and no signing
 //! code** — that work lives in the browser layer of the consuming web app.
@@ -42,8 +42,8 @@
 //! ## A short example
 //!
 //! ```ignore
-//! use asterism_core::{Federation, NetworkType};
-//! use asterism_xpub::{ExternalSigner, DeviceType};
+//! use emvault_core::{Federation, NetworkType};
+//! use emvault_xpub::{ExternalSigner, DeviceType};
 //! use bitcoin::Network;
 //!
 //! // Real device exports come back from the browser as descriptor keys:
@@ -71,7 +71,7 @@
 //!
 //! ## Reference
 //!
-//! See `design_docs/asterism_multisignature_library.md` (the **XPUB Backend**
+//! See `design_docs/emvault_multisignature_library.md` (the **XPUB Backend**
 //! section) for the full design rationale.
 
 #![warn(missing_docs)]
@@ -97,6 +97,6 @@ pub use signer::ExternalSigner;
 #[cfg(feature = "test-utils")]
 pub use test_utils::{TestExternalSigner, TestFederationFixture, TestSignerSpec};
 
-/// Re-export of `asterism-core`'s [`DeviceType`](asterism_core::DeviceType)
+/// Re-export of `emvault-core`'s [`DeviceType`](emvault_core::DeviceType)
 /// so callers don't need a direct dependency on the core crate.
-pub use asterism_core::DeviceType;
+pub use emvault_core::DeviceType;

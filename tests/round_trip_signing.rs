@@ -10,9 +10,9 @@
 
 #![cfg(feature = "test-utils")]
 
-use asterism_core::descriptor::KeyMode;
-use asterism_core::{Federation, NetworkType, Signer, SigningAction, SigningCoordinator};
-use asterism_xpub::{TestExternalSigner, TestFederationFixture};
+use emvault_core::descriptor::KeyMode;
+use emvault_core::{Federation, NetworkType, Signer, SigningAction, SigningCoordinator};
+use emvault_xpub::{TestExternalSigner, TestFederationFixture};
 use bdk_wallet::SignOptions;
 
 /// `SignOptions` tuned for synthetic-PSBT round-trip tests.

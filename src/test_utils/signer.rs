@@ -8,9 +8,9 @@
 //!
 //! This struct is **never** linked into a production build — it lives behind
 //! the `test-utils` feature and exists solely so the round-trip test can
-//! exercise [`asterism_core::SigningCoordinator`] without a real device.
+//! exercise [`emvault_core::SigningCoordinator`] without a real device.
 
-use asterism_core::{DeviceType, Signer};
+use emvault_core::{DeviceType, Signer};
 use bitcoin::Network;
 use bitcoin::Psbt;
 use bitcoin::bip32::{DerivationPath, Xpriv, Xpub};
@@ -83,7 +83,7 @@ impl TestExternalSigner {
     }
 
     /// The public-side identity. Use this to build the
-    /// [`Federation`](asterism_core::Federation).
+    /// [`Federation`](emvault_core::Federation).
     pub fn external_signer(&self) -> &ExternalSigner {
         &self.external_signer
     }

@@ -3,12 +3,12 @@
 This file is the operational cheat-sheet for the local regtest node Greg
 runs at `bitcoin-regtest` (Docker, host port `127.0.0.1:18443`). It is
 read-by-Claude when funding test addresses or debugging the node-tests
-flow. Connection details mirror `asterism-xpub/.env`:
+flow. Connection details mirror `emvault-xpub/.env`:
 
 - RPC: `regtestbtc:regtestbtcpass@127.0.0.1:18443`
 - Network: `regtest`
 - Miner wallet: `default` (mined funds land here, balances grow every 60s)
-- Asterism watch-only wallet: `asterism-xpub-regtest` (created and
+- EmVault watch-only wallet: `emvault-xpub-regtest` (created and
   populated by `tests/regtest_node_setup.rs`)
 
 ## Starting / inspecting the chain
@@ -21,7 +21,7 @@ ps aux | grep mine.sh | grep -v grep
 /home/greg/Projects/btc_regtest/mine.sh
 ```
 
-## Fund an asterism-xpub address from the miner's wallet
+## Fund an emvault-xpub address from the miner's wallet
 
 The canonical command (positional form):
 
@@ -58,7 +58,7 @@ docker exec bitcoin-regtest \
 
 The command returns a txid. Wait one mined block (~60s — `mine.sh`
 mines on a 60s loop) for it to confirm, then `getbalance` on
-`asterism-xpub-regtest` will show the new balance. To accelerate
+`emvault-xpub-regtest` will show the new balance. To accelerate
 confirmation manually, mine one block to any address — the miner
 script's address is fine:
 
@@ -73,19 +73,19 @@ docker exec bitcoin-regtest \
 ## Bootstrap / refresh the watch-only wallet
 
 ```bash
-cargo test -p asterism-xpub \
+cargo test -p emvault-xpub \
   --features test-utils,node-tests \
   --test regtest_node_setup -- --nocapture
 ```
 
-This creates `asterism-xpub-regtest` (idempotent), imports the
+This creates `emvault-xpub-regtest` (idempotent), imports the
 3-of-5 receive + change descriptors with `range=[0, 999]`, and prints the
 first 10 receive addresses.
 
 ## Inspect the watch-only wallet
 
 ```bash
-WALLET=asterism-xpub-regtest
+WALLET=emvault-xpub-regtest
 RPC="docker exec bitcoin-regtest bitcoin-cli -regtest -rpcuser=regtestbtc -rpcpassword=regtestbtcpass -rpcwallet=$WALLET"
 
 $RPC getbalance
@@ -100,7 +100,7 @@ Once the watch-only wallet has been bootstrapped, the full spend
 pipeline can be exercised against the regtest node:
 
 ```bash
-cargo test -p asterism-xpub \
+cargo test -p emvault-xpub \
   --features test-utils,node-tests \
   --test regtest_spend -- --nocapture --test-threads=1
 ```
@@ -141,11 +141,11 @@ racing for the same UTXO. Both tests self-fund independently.
 ## Reset the watch-only wallet (rarely needed)
 
 ```bash
-WALLET=asterism-xpub-regtest
+WALLET=emvault-xpub-regtest
 RPC_NODE="docker exec bitcoin-regtest bitcoin-cli -regtest -rpcuser=regtestbtc -rpcpassword=regtestbtcpass"
 
 $RPC_NODE unloadwallet $WALLET
-$RPC_NODE -rpcwallet=$WALLET dumpwallet /tmp/asterism-xpub-regtest.dump   # optional backup
+$RPC_NODE -rpcwallet=$WALLET dumpwallet /tmp/emvault-xpub-regtest.dump   # optional backup
 docker exec bitcoin-regtest rm -rf /home/bitcoin/.bitcoin/regtest/wallets/$WALLET
 # Re-run the setup test to recreate.
 ```

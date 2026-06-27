@@ -1,4 +1,4 @@
-//! Error type for [`asterism-xpub`](crate).
+//! Error type for [`emvault-xpub`](crate).
 //!
 //! Each variant points at a specific failure mode with enough context for the
 //! caller to act on it (per the project's error-style guidance in
@@ -6,7 +6,7 @@
 
 use bitcoin::Network;
 
-/// Errors produced by [`asterism-xpub`](crate).
+/// Errors produced by [`emvault-xpub`](crate).
 #[derive(Debug, thiserror::Error)]
 pub enum XpubError {
     /// The string did not parse as a [`miniscript::DescriptorPublicKey`].

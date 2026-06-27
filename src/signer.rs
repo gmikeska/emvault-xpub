@@ -1,12 +1,12 @@
 //! [`ExternalSigner`] — XPUB-based identity for consumer hardware wallets.
 //!
 //! `ExternalSigner` holds public-key material plus enough metadata for the
-//! [`asterism_core::SigningCoordinator`] to route signing requests to the
+//! [`emvault_core::SigningCoordinator`] to route signing requests to the
 //! correct browser-side device. It implements
-//! [`asterism_core::Signer`] but not any signing trait — that work happens in
+//! [`emvault_core::Signer`] but not any signing trait — that work happens in
 //! the trustee's browser, not in this library.
 
-use asterism_core::{
+use emvault_core::{
     DeviceType, Signer, SignerCapabilities, SignerHealth, SignerId, SignerType, TransportType,
     error::SignerError, network::NetworkType,
 };
@@ -21,8 +21,8 @@ use crate::parsing::parse_origin;
 ///
 /// `ExternalSigner` is **structurally incapable** of signing server-side:
 /// [`Self::signer_type`] always returns [`SignerType::External`], so the
-/// [`asterism_core::SigningCoordinator`] emits a
-/// [`SigningAction::External`](asterism_core::SigningAction::External)
+/// [`emvault_core::SigningCoordinator`] emits a
+/// [`SigningAction::External`](emvault_core::SigningAction::External)
 /// whenever this signer is asked to participate, leaving the actual signing
 /// to the browser-side device SDK.
 #[derive(Clone, Debug)]
@@ -172,7 +172,7 @@ impl Signer for ExternalSigner {
 }
 
 /// Capability matrix derived from
-/// `design_docs/asterism_multisignature_library.md` (XPUB Backend section)
+/// `design_docs/emvault_multisignature_library.md` (XPUB Backend section)
 /// and the per-device tables that follow it.
 fn capabilities_for(device: &DeviceType) -> SignerCapabilities {
     match device {
@@ -208,7 +208,7 @@ fn capabilities_for(device: &DeviceType) -> SignerCapabilities {
             transports: vec![TransportType::Usb, TransportType::Qr, TransportType::SdCard],
         },
         // Coldcard: SD card air-gap, NFC, USB. Taproot landed in recent
-        // firmware but we keep it conservative until certified for asterism
+        // firmware but we keep it conservative until certified for emvault
         // federations.
         DeviceType::Coldcard => SignerCapabilities {
             blind_signing: false,

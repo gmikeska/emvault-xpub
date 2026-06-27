@@ -5,8 +5,8 @@
 
 use std::fmt::Write as _;
 
-use asterism_core::{DeviceType, Signer, SignerType, TransportType};
-use asterism_xpub::{ExternalSigner, XpubError};
+use emvault_core::{DeviceType, Signer, SignerType, TransportType};
+use emvault_xpub::{ExternalSigner, XpubError};
 use bitcoin::Network;
 use bitcoin::bip32::{DerivationPath, Fingerprint, Xpriv, Xpub};
 use bitcoin::secp256k1::Secp256k1;

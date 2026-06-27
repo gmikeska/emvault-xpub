@@ -4,8 +4,8 @@
 
 use std::collections::HashSet;
 
-use asterism_core::{DeviceType, Signer};
-use asterism_xpub::{TestExternalSigner, TestFederationFixture};
+use emvault_core::{DeviceType, Signer};
+use emvault_xpub::{TestExternalSigner, TestFederationFixture};
 use bitcoin::Network;
 use bitcoin::bip32::{DerivationPath, Xpub};
 use bitcoin::secp256k1::Secp256k1;

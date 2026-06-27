@@ -1,17 +1,17 @@
-# asterism-xpub
+# emvault-xpub
 
 XPUB-based external [`Signer`] backend for the Emerald multi-signature custody
 platform. Consumer hardware wallets (Trezor, Blockstream Jade, Ledger,
 Coldcard, Foundation Passport Prime, etc.) export an XPUB at a BIP-48
 derivation path; this crate ingests that XPUB plus its key-origin metadata
 and exposes it as an `ExternalSigner` ready to drop into an
-`asterism_core::Federation`.
+`emvault_core::Federation`.
 
 ## Quick start
 
 ```rust,ignore
-use asterism_core::{Federation, NetworkType};
-use asterism_xpub::{ExternalSigner, DeviceType};
+use emvault_core::{Federation, NetworkType};
+use emvault_xpub::{ExternalSigner, DeviceType};
 use bitcoin::Network;
 
 let alice = ExternalSigner::from_descriptor_key(
@@ -42,9 +42,9 @@ to the trustee's browser. The browser is responsible for:
    Jade serial API, Ledger `hwapp`, etc.).
 3. Returning the signed PSBT to the web app.
 
-The `SigningCoordinator` in `asterism-core` orchestrates this by emitting a
+The `SigningCoordinator` in `emvault-core` orchestrates this by emitting a
 `SigningAction::External` payload for every external signer in the
-federation; `asterism-xpub` provides the server-side identity that makes
+federation; `emvault-xpub` provides the server-side identity that makes
 that payload meaningful.
 
 ## The `test-utils` feature
@@ -57,7 +57,7 @@ full `request_signatures -> receive_signature -> finalize` round trip
 without any device or browser involvement.
 
 ```bash
-cargo test -p asterism-xpub --features test-utils
+cargo test -p emvault-xpub --features test-utils
 ```
 
 The mnemonics in `.env` are **dev-only test vectors with no real value**.
@@ -76,10 +76,10 @@ spend those funds.
 
 ## Strict-mode lints
 
-This crate is held to the same strict-clippy bar as `asterism-core` and
-`asterism-pkcs11`:
+This crate is held to the same strict-clippy bar as `emvault-core` and
+`emvault-pkcs11`:
 
 ```bash
-cargo clippy -p asterism-xpub --all-features -- \
+cargo clippy -p emvault-xpub --all-features -- \
   -D warnings -W clippy::pedantic -W rust-2018-idioms
 ```

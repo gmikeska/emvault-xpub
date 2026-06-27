@@ -1,6 +1,6 @@
 //! Minimal Bitcoin Core JSON-RPC client for `node-tests`-gated tests.
 //!
-//! Mirrors `asterism-core/tests/common/rpc.rs` but with the additional
+//! Mirrors `emvault-core/tests/common/rpc.rs` but with the additional
 //! wallet-management methods the regtest workflow needs:
 //! `createwallet`, `loadwallet`, `listwallets`, `importdescriptors`,
 //! `getbalance`, `listunspent`. All wallet-scoped methods route through
@@ -27,7 +27,7 @@ use serde_json::{Value, json};
 
 const TIMEOUT: Duration = Duration::from_secs(10);
 
-/// Best-effort load of `asterism-xpub/.env`.
+/// Best-effort load of `emvault-xpub/.env`.
 pub fn load_env() {
     let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(".env");
     let _ = dotenvy::from_path(&path);
@@ -105,7 +105,7 @@ impl RpcClient {
     fn call(&self, url: &str, method: &str, params: &Value) -> Result<Value, RpcError> {
         let body = json!({
             "jsonrpc": "1.0",
-            "id": "asterism-xpub-test",
+            "id": "emvault-xpub-test",
             "method": method,
             "params": params.clone(),
         });
@@ -490,7 +490,7 @@ impl RpcClient {
     /// `sendtoaddress` via the named-arg form, so we can pass an explicit
     /// `fee_rate` (sat/vB). The plain positional form fails on this regtest
     /// node because `bitcoind` runs without `-fallbackfee`. See
-    /// `asterism-xpub/REGTEST.md` for the full background.
+    /// `emvault-xpub/REGTEST.md` for the full background.
     ///
     /// Returns the txid as a hex string.
     pub fn sendtoaddress_named(

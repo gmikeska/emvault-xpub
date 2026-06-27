@@ -16,7 +16,7 @@ pub mod sync;
 use std::collections::BTreeMap;
 use std::sync::OnceLock;
 
-use asterism_core::{Federation, Signer, UnsignedPsbt};
+use emvault_core::{Federation, Signer, UnsignedPsbt};
 use bdk_wallet::Wallet;
 use bitcoin::bip32::{ChildNumber, DerivationPath};
 use bitcoin::hashes::Hash as _;
@@ -26,9 +26,9 @@ use bitcoin::{
     absolute::LockTime, transaction::Version,
 };
 
-/// Load `asterism-xpub/.env` exactly once for the whole test process.
+/// Load `emvault-xpub/.env` exactly once for the whole test process.
 ///
-/// `cargo test` runs from the crate manifest directory (`asterism-xpub/`),
+/// `cargo test` runs from the crate manifest directory (`emvault-xpub/`),
 /// so `.env` resolves at that root. We resolve it via `CARGO_MANIFEST_DIR`
 /// to be robust against a different CWD if the test binary is invoked
 /// directly.
@@ -41,8 +41,8 @@ pub fn init_env() {
             // If the file is already loaded by another caller we'll still
             // resolve env vars correctly; only flag truly missing files.
             assert!(
-                std::env::var("ASTERISM_XPUB_TEST_MNEMONIC_1").is_ok(),
-                "could not load asterism-xpub/.env at {}: {e}",
+                std::env::var("EMVAULT_XPUB_TEST_MNEMONIC_1").is_ok(),
+                "could not load emvault-xpub/.env at {}: {e}",
                 path.display(),
             );
         }

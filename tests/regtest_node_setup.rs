@@ -1,8 +1,8 @@
-//! Regtest end-to-end setup test for the 3-of-5 asterism-xpub federation.
+//! Regtest end-to-end setup test for the 3-of-5 emvault-xpub federation.
 //!
 //! What it does:
 //!
-//! 1. Loads `asterism-xpub/.env` and verifies the node is running on
+//! 1. Loads `emvault-xpub/.env` and verifies the node is running on
 //!    `regtest`.
 //! 2. Builds five `TestExternalSigner`s from the BIP-39 fixtures, networked
 //!    for `Network::Regtest`.
@@ -10,7 +10,7 @@
 //! 4. Cross-validates the descriptor: the addresses miniscript derives
 //!    locally for `/0/0`...`/0/9` must match what Bitcoin Core's
 //!    `deriveaddresses` produces from the same descriptor.
-//! 5. Bootstraps a watch-only descriptor wallet `asterism-xpub-regtest` and
+//! 5. Bootstraps a watch-only descriptor wallet `emvault-xpub-regtest` and
 //!    imports the receive (`/0/*`) and change (`/1/*`) descriptors. Both
 //!    are computed with their `#checksum` via `getdescriptorinfo`.
 //! 6. Prints the first 10 receive addresses to stdout (run with
@@ -20,20 +20,20 @@
 //! Run with:
 //!
 //! ```bash
-//! cargo test -p asterism-xpub \
+//! cargo test -p emvault-xpub \
 //!   --features test-utils,node-tests \
 //!   --test regtest_node_setup -- --nocapture
 //! ```
 //!
 //! If `BITCOIN_RPC_*` is missing from `.env` or the node is unreachable,
 //! the test prints a skip banner and returns successfully — this matches
-//! the gating pattern asterism-core uses for its own node-tests.
+//! the gating pattern emvault-core uses for its own node-tests.
 
 #![cfg(all(feature = "test-utils", feature = "node-tests"))]
 
-use asterism_core::descriptor::KeyMode;
-use asterism_core::{Federation, NetworkType, Signer};
-use asterism_xpub::{DeviceType, TestExternalSigner};
+use emvault_core::descriptor::KeyMode;
+use emvault_core::{Federation, NetworkType, Signer};
+use emvault_xpub::{DeviceType, TestExternalSigner};
 use bitcoin::Network;
 use bitcoin::bip32::DerivationPath;
 
@@ -41,7 +41,7 @@ mod common;
 
 use common::rpc::RpcClient;
 
-const WALLET_NAME: &str = "asterism-xpub-regtest";
+const WALLET_NAME: &str = "emvault-xpub-regtest";
 /// Index range covered by the descriptor import in Bitcoin Core. Once a
 /// descriptor has been imported with this range, future imports must
 /// include it (per `importdescriptors` semantics) — so we bind to the
@@ -58,7 +58,7 @@ fn regtest_setup_prints_funding_addresses() {
     let Some(rpc) = RpcClient::from_env() else {
         eprintln!(
             "[skip] BITCOIN_RPC_* env vars not set; this test only runs against a \
-             configured regtest node. See asterism-xpub/.env."
+             configured regtest node. See emvault-xpub/.env."
         );
         return;
     };
@@ -181,7 +181,7 @@ fn regtest_setup_prints_funding_addresses() {
     let balance = rpc.getbalance(WALLET_NAME).unwrap_or(0.0);
     println!();
     println!("====================================================================");
-    println!("  asterism-xpub regtest 3-of-5 federation — ready for funding");
+    println!("  emvault-xpub regtest 3-of-5 federation — ready for funding");
     println!("====================================================================");
     println!("  wallet:       {WALLET_NAME}  (watch-only, descriptor)");
     println!("  threshold:    3 of {}", signer_summary.len());
@@ -204,22 +204,22 @@ fn regtest_setup_prints_funding_addresses() {
 }
 
 fn build_regtest_test_signers() -> Vec<TestExternalSigner> {
-    // Pull the same 5 mnemonics asterism-xpub's testnet fixture uses, but
+    // Pull the same 5 mnemonics emvault-xpub's testnet fixture uses, but
     // re-derive each with `Network::Regtest` so the federation typing
     // matches what Bitcoin Core expects.
-    let path: DerivationPath = std::env::var("ASTERISM_XPUB_TEST_DERIVATION_PATH")
-        .expect("ASTERISM_XPUB_TEST_DERIVATION_PATH set in .env")
+    let path: DerivationPath = std::env::var("EMVAULT_XPUB_TEST_DERIVATION_PATH")
+        .expect("EMVAULT_XPUB_TEST_DERIVATION_PATH set in .env")
         .parse()
         .expect("derivation path parses");
 
     (1..=5u32)
         .map(|n| {
-            let mnemonic = std::env::var(format!("ASTERISM_XPUB_TEST_MNEMONIC_{n}"))
-                .unwrap_or_else(|_| panic!("missing ASTERISM_XPUB_TEST_MNEMONIC_{n}"));
-            let device_label = std::env::var(format!("ASTERISM_XPUB_TEST_DEVICE_{n}"))
-                .unwrap_or_else(|_| panic!("missing ASTERISM_XPUB_TEST_DEVICE_{n}"));
-            let label = std::env::var(format!("ASTERISM_XPUB_TEST_LABEL_{n}"))
-                .unwrap_or_else(|_| panic!("missing ASTERISM_XPUB_TEST_LABEL_{n}"));
+            let mnemonic = std::env::var(format!("EMVAULT_XPUB_TEST_MNEMONIC_{n}"))
+                .unwrap_or_else(|_| panic!("missing EMVAULT_XPUB_TEST_MNEMONIC_{n}"));
+            let device_label = std::env::var(format!("EMVAULT_XPUB_TEST_DEVICE_{n}"))
+                .unwrap_or_else(|_| panic!("missing EMVAULT_XPUB_TEST_DEVICE_{n}"));
+            let label = std::env::var(format!("EMVAULT_XPUB_TEST_LABEL_{n}"))
+                .unwrap_or_else(|_| panic!("missing EMVAULT_XPUB_TEST_LABEL_{n}"));
             let device_type = parse_device_type(&device_label);
             TestExternalSigner::from_mnemonic(
                 &mnemonic,
