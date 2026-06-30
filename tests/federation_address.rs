@@ -7,11 +7,11 @@
 
 #![cfg(feature = "test-utils")]
 
+use bdk_wallet::KeychainKind;
+use bitcoin::{AddressType, Network};
 use emvault_core::descriptor::{KeyMode, to_multipath_string};
 use emvault_core::{Federation, NetworkType, Signer};
 use emvault_xpub::TestFederationFixture;
-use bdk_wallet::KeychainKind;
-use bitcoin::{AddressType, Network};
 
 mod common;
 

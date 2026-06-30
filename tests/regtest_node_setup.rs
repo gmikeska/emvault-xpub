@@ -31,11 +31,11 @@
 
 #![cfg(all(feature = "test-utils", feature = "node-tests"))]
 
+use bitcoin::Network;
+use bitcoin::bip32::DerivationPath;
 use emvault_core::descriptor::KeyMode;
 use emvault_core::{Federation, NetworkType, Signer};
 use emvault_xpub::{DeviceType, TestExternalSigner};
-use bitcoin::Network;
-use bitcoin::bip32::DerivationPath;
 
 mod common;
 

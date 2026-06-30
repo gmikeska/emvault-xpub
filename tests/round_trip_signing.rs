@@ -10,10 +10,10 @@
 
 #![cfg(feature = "test-utils")]
 
+use bdk_wallet::SignOptions;
 use emvault_core::descriptor::KeyMode;
 use emvault_core::{Federation, NetworkType, Signer, SigningAction, SigningCoordinator};
 use emvault_xpub::{TestExternalSigner, TestFederationFixture};
-use bdk_wallet::SignOptions;
 
 /// `SignOptions` tuned for synthetic-PSBT round-trip tests.
 ///

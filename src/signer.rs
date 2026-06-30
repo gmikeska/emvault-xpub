@@ -6,12 +6,12 @@
 //! [`emvault_core::Signer`] but not any signing trait — that work happens in
 //! the trustee's browser, not in this library.
 
+use bitcoin::Network;
+use bitcoin::bip32::{DerivationPath, Fingerprint, Xpub};
 use emvault_core::{
     DeviceType, Signer, SignerCapabilities, SignerHealth, SignerId, SignerType, TransportType,
     error::SignerError, network::NetworkType,
 };
-use bitcoin::Network;
-use bitcoin::bip32::{DerivationPath, Fingerprint, Xpub};
 
 use crate::error::XpubError;
 use crate::parsing::parse_origin;

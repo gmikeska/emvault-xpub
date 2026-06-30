@@ -44,15 +44,15 @@
 
 #![cfg(all(feature = "test-utils", feature = "node-tests"))]
 
+use bdk_wallet::SignOptions;
+use bitcoin::address::NetworkUnchecked;
+use bitcoin::bip32::DerivationPath;
+use bitcoin::{Address, Amount, FeeRate, Network};
 use emvault_core::descriptor::KeyMode;
 use emvault_core::{
     Federation, NetworkType, Signer, SigningAction, SigningCoordinator, UnsignedPsbt,
 };
 use emvault_xpub::{DeviceType, TestExternalSigner};
-use bdk_wallet::SignOptions;
-use bitcoin::address::NetworkUnchecked;
-use bitcoin::bip32::DerivationPath;
-use bitcoin::{Address, Amount, FeeRate, Network};
 
 mod common;
 

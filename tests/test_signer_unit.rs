@@ -4,11 +4,11 @@
 
 use std::collections::HashSet;
 
-use emvault_core::{DeviceType, Signer};
-use emvault_xpub::{TestExternalSigner, TestFederationFixture};
 use bitcoin::Network;
 use bitcoin::bip32::{DerivationPath, Xpub};
 use bitcoin::secp256k1::Secp256k1;
+use emvault_core::{DeviceType, Signer};
+use emvault_xpub::{TestExternalSigner, TestFederationFixture};
 
 mod common;
 

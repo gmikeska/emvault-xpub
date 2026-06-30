@@ -16,8 +16,7 @@ fn main() {
     // byte-identical to reproduce `EMVAULT_XPUB_TEST_MNEMONIC_5` in .env.
     // Do NOT rebrand it to "emvault…": that shortens it to 15 bytes and
     // changes the derived mnemonic/keys (it is a seed, not a brand string).
-    let entropies: [(&str, [u8; 16]); 1] =
-        [("signer 5 (coldcard)", *b"asterism-xpub-c5")];
+    let entropies: [(&str, [u8; 16]); 1] = [("signer 5 (coldcard)", *b"asterism-xpub-c5")];
     for (label, entropy) in entropies {
         match bip39::Mnemonic::from_entropy(&entropy) {
             Ok(m) => println!("{label}: {m}"),

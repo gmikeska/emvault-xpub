@@ -5,9 +5,9 @@
 //! [`TestFederationFixture::from_env`]). See [`emvault-xpub/.env`] for the
 //! canonical mnemonics; they are publicly-known test vectors with no value.
 
-use emvault_core::DeviceType;
 use bitcoin::Network;
 use bitcoin::bip32::DerivationPath;
+use emvault_core::DeviceType;
 
 use crate::error::XpubError;
 use crate::test_utils::signer::TestExternalSigner;

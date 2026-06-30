@@ -10,13 +10,13 @@
 //! the `test-utils` feature and exists solely so the round-trip test can
 //! exercise [`emvault_core::SigningCoordinator`] without a real device.
 
-use emvault_core::{DeviceType, Signer};
 use bitcoin::Network;
 use bitcoin::Psbt;
 use bitcoin::bip32::{DerivationPath, Xpriv, Xpub};
 use bitcoin::hashes::Hash;
 use bitcoin::secp256k1::{All, Message, Secp256k1};
 use bitcoin::sighash::{EcdsaSighashType, SighashCache};
+use emvault_core::{DeviceType, Signer};
 
 use crate::error::XpubError;
 use crate::signer::ExternalSigner;

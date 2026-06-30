@@ -16,7 +16,6 @@ pub mod sync;
 use std::collections::BTreeMap;
 use std::sync::OnceLock;
 
-use emvault_core::{Federation, Signer, UnsignedPsbt};
 use bdk_wallet::Wallet;
 use bitcoin::bip32::{ChildNumber, DerivationPath};
 use bitcoin::hashes::Hash as _;
@@ -25,6 +24,7 @@ use bitcoin::{
     Amount, Network, OutPoint, Psbt, ScriptBuf, Sequence, Transaction, TxIn, TxOut, Txid, Witness,
     absolute::LockTime, transaction::Version,
 };
+use emvault_core::{Federation, Signer, UnsignedPsbt};
 
 /// Load `emvault-xpub/.env` exactly once for the whole test process.
 ///

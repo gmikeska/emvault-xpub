@@ -5,11 +5,11 @@
 
 use std::fmt::Write as _;
 
-use emvault_core::{DeviceType, Signer, SignerType, TransportType};
-use emvault_xpub::{ExternalSigner, XpubError};
 use bitcoin::Network;
 use bitcoin::bip32::{DerivationPath, Fingerprint, Xpriv, Xpub};
 use bitcoin::secp256k1::Secp256k1;
+use emvault_core::{DeviceType, Signer, SignerType, TransportType};
+use emvault_xpub::{ExternalSigner, XpubError};
 
 /// Build a deterministic descriptor key string `[fp/m/48'/1'/0'/2']xpub...`
 /// suitable for end-to-end tests.
