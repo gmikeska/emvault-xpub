@@ -1,6 +1,6 @@
 # emvault-xpub
 
-XPUB-based external [`Signer`] backend for the Emerald multi-signature custody
+XPUB-based external `Signer` backend for the EmVault multi-signature custody
 platform. Consumer hardware wallets (Trezor, Blockstream Jade, Ledger,
 Coldcard, Foundation Passport Prime, etc.) export an XPUB at a BIP-48
 derivation path; this crate ingests that XPUB plus its key-origin metadata
