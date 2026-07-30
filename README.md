@@ -7,6 +7,8 @@ derivation path; this crate ingests that XPUB plus its key-origin metadata
 and exposes it as an `ExternalSigner` ready to drop into an
 `emvault_core::Federation`.
 
+See the [CHANGELOG](https://github.com/gmikeska/emvault-xpub/blob/master/CHANGELOG.md) for release notes.
+
 ## Quick start
 
 ```rust,ignore
