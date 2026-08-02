@@ -152,7 +152,19 @@ impl Signer for ExternalSigner {
     }
 
     fn supported_networks(&self) -> Vec<NetworkType> {
-        vec![NetworkType::Bitcoin(self.network)]
+        let mut nets = vec![NetworkType::Bitcoin(self.network)];
+        // Devices that can sign Elements/Liquid also cover the Liquid
+        // network(s) whose xpub version matches this signer's Bitcoin network:
+        // a BIP-48 coin_type-1 `tpub` validates for testnet/regtest Liquid, and
+        // a mainnet xpub for Liquid mainnet — the same key material serves both
+        // chains. Bitcoin-only devices (e.g. Trezor) are intentionally excluded
+        // so a Liquid federation can't be built with a cosigner that can never
+        // sign its PSETs.
+        #[cfg(feature = "elements")]
+        if device_supports_liquid(&self.device_type) {
+            nets.extend(elements_networks_for(self.network));
+        }
+        nets
     }
 
     fn capabilities(&self) -> SignerCapabilities {
@@ -168,6 +180,30 @@ impl Signer for ExternalSigner {
             firmware_version: None,
             last_seen: None,
         })
+    }
+}
+
+/// Whether a device can sign Elements/Liquid (confidential) transactions.
+/// Jade speaks Liquid natively; an HSM wired through `ExternalSigner` (e.g. a
+/// PKCS#11 signing service) also covers Elements. The remaining consumer
+/// devices are Bitcoin-only in this backend.
+#[cfg(feature = "elements")]
+const fn device_supports_liquid(device: &DeviceType) -> bool {
+    matches!(device, DeviceType::Jade | DeviceType::Hsm { .. })
+}
+
+/// The Elements/Liquid networks whose xpub version matches `network`. A
+/// testnet-versioned `tpub` validates for both Liquid testnet and Elements
+/// regtest; a mainnet xpub for Liquid mainnet.
+#[cfg(feature = "elements")]
+fn elements_networks_for(network: Network) -> Vec<NetworkType> {
+    use emvault_core::network::ElementsNetworkId;
+    match network {
+        Network::Bitcoin => vec![NetworkType::Elements(ElementsNetworkId::Liquid)],
+        _ => vec![
+            NetworkType::Elements(ElementsNetworkId::LiquidTestnet),
+            NetworkType::Elements(ElementsNetworkId::ElementsRegtest),
+        ],
     }
 }
 
@@ -292,5 +328,56 @@ mod tests {
         .unwrap();
         assert_eq!(signer.signer_type(), SignerType::External);
         assert_eq!(signer.label(), Some("Alice's Trezor"));
+    }
+
+    fn test_signer(network: Network, device: DeviceType) -> ExternalSigner {
+        // `new` cross-checks the xpub version against `network`, so the fixture
+        // key must match: testnet xpub for the testnet-versioned networks,
+        // mainnet xpub for Bitcoin mainnet.
+        let secp = Secp256k1::new();
+        let seed_net = if network == Network::Bitcoin {
+            Network::Bitcoin
+        } else {
+            Network::Testnet
+        };
+        let xpriv = Xpriv::new_master(seed_net, &[0x33; 32]).unwrap();
+        let xpub = Xpub::from_priv(&secp, &xpriv);
+        ExternalSigner::new(
+            xpub,
+            Fingerprint::default(),
+            DerivationPath::master(),
+            network,
+            device,
+            None,
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn bitcoin_only_device_advertises_no_liquid() {
+        let signer = test_signer(Network::Testnet, DeviceType::Trezor);
+        assert_eq!(
+            signer.supported_networks(),
+            vec![NetworkType::Bitcoin(Network::Testnet)],
+        );
+    }
+
+    #[cfg(feature = "elements")]
+    #[test]
+    fn jade_testnet_advertises_liquid_testnet() {
+        use emvault_core::network::ElementsNetworkId;
+        let nets = test_signer(Network::Testnet, DeviceType::Jade).supported_networks();
+        assert!(nets.contains(&NetworkType::Bitcoin(Network::Testnet)));
+        assert!(nets.contains(&NetworkType::Elements(ElementsNetworkId::LiquidTestnet)));
+        assert!(nets.contains(&NetworkType::Elements(ElementsNetworkId::ElementsRegtest)));
+    }
+
+    #[cfg(feature = "elements")]
+    #[test]
+    fn jade_mainnet_advertises_liquid_mainnet() {
+        use emvault_core::network::ElementsNetworkId;
+        let nets = test_signer(Network::Bitcoin, DeviceType::Jade).supported_networks();
+        assert!(nets.contains(&NetworkType::Elements(ElementsNetworkId::Liquid)));
+        assert!(!nets.contains(&NetworkType::Elements(ElementsNetworkId::LiquidTestnet)));
     }
 }

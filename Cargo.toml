@@ -8,6 +8,10 @@ repository = "https://github.com/gmikeska/emvault-xpub"
 
 [features]
 default = []
+# Advertise Elements/Liquid network support on Liquid-capable signers (Jade,
+# HSM). Pure forward to `emvault-core/elements` so `NetworkType::Elements`
+# becomes nameable; without it `ExternalSigner` reports Bitcoin networks only.
+elements = ["emvault-core/elements"]
 # Expose `TestExternalSigner` and the BIP-39 fixture loader to downstream
 # tests. Pulls in `bip39` purely to derive deterministic xprivs from
 # well-known dev mnemonics — never enable this in a production build.
