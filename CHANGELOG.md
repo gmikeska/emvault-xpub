@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Entries for 0.5.0 and earlier were reconstructed from git history.
 
+## [0.7.0] - 2026-08-03
+
+### Added
+- `elements` feature: advertise Liquid networks on Liquid-capable signers
+  (Jade / HSM), forwarding to `emvault-core/elements` so `NetworkType::Elements`
+  is offered on signers that can sign for it.
+
+### Changed
+- Released in lockstep with the suite-wide v0.7.0 update.
+
 ## [0.6.0] - 2026-07-29
 
 ### Changed
