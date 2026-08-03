@@ -93,6 +93,37 @@ impl ExternalSigner {
     /// - [`XpubError::ExpectedXpubGotSingle`] /
     ///   [`XpubError::MultiXpubNotSupported`] for non-xpub inputs.
     /// - Plus any error returned by [`Self::new`].
+    ///
+    /// # Example
+    ///
+    /// Parse a device export into a signer and read back its accessors. This is
+    /// pure parsing — no device or network is contacted.
+    ///
+    /// ```
+    /// use bitcoin::Network;
+    /// use emvault_core::Signer;
+    /// use emvault_xpub::{DeviceType, ExternalSigner};
+    ///
+    /// // The `[fingerprint/derivation]xpub` string a hardware wallet exports.
+    /// let key = "[08adc525/48h/1h/0h/2h]tpubDEBbc4DHf8iYsD7sDEbhPE6pnde322fTTYcNUMrFz49cRSk9QA8WiCdzZSBVW5pqMHrSR4yxhXm6E5xCBqyqo93T3Z67JkbeL3bPxsebx8r";
+    ///
+    /// let signer = ExternalSigner::from_descriptor_key(
+    ///     key,
+    ///     Network::Testnet,
+    ///     DeviceType::Jade,
+    ///     Some("Alice's Jade".into()),
+    /// )?;
+    ///
+    /// // Inherent accessors:
+    /// assert_eq!(signer.network(), Network::Testnet);
+    /// assert!(matches!(signer.device_type(), DeviceType::Jade));
+    ///
+    /// // `Signer`-trait accessors:
+    /// assert_eq!(signer.fingerprint().to_string(), "08adc525");
+    /// assert_eq!(signer.derivation_path().to_string(), "48'/1'/0'/2'");
+    /// assert_eq!(signer.label(), Some("Alice's Jade"));
+    /// # Ok::<(), emvault_xpub::XpubError>(())
+    /// ```
     pub fn from_descriptor_key(
         key: &str,
         network: Network,
@@ -377,6 +408,31 @@ mod tests {
     fn jade_mainnet_advertises_liquid_mainnet() {
         use emvault_core::network::ElementsNetworkId;
         let nets = test_signer(Network::Bitcoin, DeviceType::Jade).supported_networks();
+        assert!(nets.contains(&NetworkType::Elements(ElementsNetworkId::Liquid)));
+        assert!(!nets.contains(&NetworkType::Elements(ElementsNetworkId::LiquidTestnet)));
+    }
+
+    #[cfg(feature = "elements")]
+    #[test]
+    fn hsm_testnet_advertises_liquid_testnet() {
+        use emvault_core::network::ElementsNetworkId;
+        let device = DeviceType::Hsm {
+            vendor: "SoftHSMv2".into(),
+        };
+        let nets = test_signer(Network::Testnet, device).supported_networks();
+        assert!(nets.contains(&NetworkType::Bitcoin(Network::Testnet)));
+        assert!(nets.contains(&NetworkType::Elements(ElementsNetworkId::LiquidTestnet)));
+        assert!(nets.contains(&NetworkType::Elements(ElementsNetworkId::ElementsRegtest)));
+    }
+
+    #[cfg(feature = "elements")]
+    #[test]
+    fn hsm_mainnet_advertises_liquid_mainnet() {
+        use emvault_core::network::ElementsNetworkId;
+        let device = DeviceType::Hsm {
+            vendor: "SoftHSMv2".into(),
+        };
+        let nets = test_signer(Network::Bitcoin, device).supported_networks();
         assert!(nets.contains(&NetworkType::Elements(ElementsNetworkId::Liquid)));
         assert!(!nets.contains(&NetworkType::Elements(ElementsNetworkId::LiquidTestnet)));
     }
