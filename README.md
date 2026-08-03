@@ -49,6 +49,19 @@ The `SigningCoordinator` in `emvault-core` orchestrates this by emitting a
 federation; `emvault-xpub` provides the server-side identity that makes
 that payload meaningful.
 
+## The `elements` feature
+
+Off by default. Enabling `elements` (a pure forward to `emvault-core/elements`)
+makes `NetworkType::Elements` available, so Liquid-capable signers — Jade and
+HSM-backed cosigners that can sign for Liquid — **advertise Liquid networks**
+alongside Bitcoin. A signer's onboarded BIP-48 xpub is the same for both chains;
+this feature is what lets a dual-chain federation offer the Elements/Liquid view
+of that signer. Leave it off for Bitcoin-only deployments.
+
+```toml
+emvault-xpub = { version = "0.7", features = ["elements"] }
+```
+
 ## The `test-utils` feature
 
 When you enable `test-utils`, this crate also exposes `TestExternalSigner` —
