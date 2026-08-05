@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Entries for 0.5.0 and earlier were reconstructed from git history.
 
+## [0.8.0] - Unreleased
+
+### Changed
+- Released in lockstep with the suite-wide v0.8.0; no functional changes to
+  `emvault-xpub` yet. Taproot support for the xpub signing path (and hardware
+  cosigners such as Passport Prime) is in progress ahead of the v0.8.0 cut.
+
 ## [0.7.0] - 2026-08-03
 
 ### Added
