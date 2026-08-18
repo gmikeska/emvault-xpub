@@ -1,6 +1,6 @@
 [package]
 name = "emvault-xpub"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2024"
 description = "External signer backend for the EmVault multi-signature custody platform: XPUB ingestion + descriptor coordination for consumer hardware wallets (Trezor, Jade, Ledger, Coldcard, Foundation Passport Prime)."
 license = "MIT OR Apache-2.0"
@@ -23,7 +23,7 @@ test-utils = ["dep:bip39"]
 node-tests = []
 
 [dependencies]
-emvault-core = { version = "0.7.0", path = "../emvault-core" }
+emvault-core = { version = "0.8.0", path = "../emvault-core" }
 bitcoin = "0.32.10"
 miniscript = "12.3.7"
 serde = { version = "1.0.228", features = ["derive"] }
