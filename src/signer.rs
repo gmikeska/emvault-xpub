@@ -183,6 +183,9 @@ impl Signer for ExternalSigner {
     }
 
     fn supported_networks(&self) -> Vec<NetworkType> {
+        // `mut` is only needed under the `elements` feature (the `nets.extend`
+        // below); without it the binding is never mutated.
+        #[cfg_attr(not(feature = "elements"), allow(unused_mut))]
         let mut nets = vec![NetworkType::Bitcoin(self.network)];
         // Devices that can sign Elements/Liquid also cover the Liquid
         // network(s) whose xpub version matches this signer's Bitcoin network:
