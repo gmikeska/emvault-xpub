@@ -7,12 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Entries for 0.5.0 and earlier were reconstructed from git history.
 
-## [0.8.0] - Unreleased
+## [0.8.0] - 2026-08-16
+
+### Added
+- Doctest example on `ExternalSigner::from_descriptor_key` showing how a
+  `[fingerprint/derivation]xpub` device export is parsed into a signer and its
+  inherent (`network`, `device_type`) and `Signer`-trait (`fingerprint`,
+  `derivation_path`, `label`) accessors read back — pure parsing, no device or
+  network contacted.
 
 ### Changed
-- Released in lockstep with the suite-wide v0.8.0; no functional changes to
-  `emvault-xpub` yet. Taproot support for the xpub signing path (and hardware
-  cosigners such as Passport Prime) is in progress ahead of the v0.8.0 cut.
+- Released in lockstep with the suite-wide v0.8.0 update.
+- Expanded the `elements`-gated test suite with HSM Liquid network-advertisement
+  coverage: testnet HSM signers advertise Liquid Testnet + Elements Regtest, and
+  mainnet HSM signers advertise Liquid (and not Liquid Testnet).
 
 ## [0.7.0] - 2026-08-03
 
