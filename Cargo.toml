@@ -23,7 +23,7 @@ test-utils = ["dep:bip39"]
 node-tests = []
 
 [dependencies]
-emvault-core = { version = "0.9.0", path = "../emvault-core" }
+emvault-core = { version = "0.9.0" }
 bitcoin = "0.32.10"
 miniscript = "12.3.7"
 serde = { version = "1.0.228", features = ["derive"] }
@@ -33,7 +33,7 @@ thiserror = "2.0.18"
 bip39 = { version = "2.1.0", optional = true }
 
 [dev-dependencies]
-emvault-core = { version = "0.9.0", features = ["test-utils"], path = "../emvault-core" }
+emvault-core = { version = "0.9.0", features = ["test-utils"] }
 bdk_wallet = "3.1.0"
 dotenvy = "0.15.7"
 # Used by the `node-tests` feature for the minimal Bitcoin Core JSON-RPC
