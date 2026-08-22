@@ -394,6 +394,8 @@ checksum = "d0881ea181b1df73ff77ffaaf9c7544ecc11e82fba9b5f27b262a3c73a332555"
 [[package]]
 name = "emvault-core"
 version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "992bd238f41e23b06617be62cf48a12c9acf141340cb425c2f960eb4b9f4b29a"
 dependencies = [
  "bdk_bitcoind_rpc",
  "bdk_wallet",
