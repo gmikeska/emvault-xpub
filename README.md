@@ -59,7 +59,7 @@ this feature is what lets a dual-chain federation offer the Elements/Liquid view
 of that signer. Leave it off for Bitcoin-only deployments.
 
 ```toml
-emvault-xpub = { version = "0.9", features = ["elements"] }
+emvault-xpub = { version = "0.10", features = ["elements"] }
 ```
 
 ## The `test-utils` feature
